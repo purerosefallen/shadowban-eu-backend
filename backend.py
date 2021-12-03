@@ -638,7 +638,7 @@ if args.debug is not None:
     ensure_dir(debug_dir)
     debug_file = open(args.debug, "a")
 
-def start():
+def start(*arg, **kwargs):
     global db
     db = None
     if args.mongo_host is not None:
