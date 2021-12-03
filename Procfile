@@ -1,1 +1,1 @@
-web: gunicorn backend:app --log-file -
+web: python3 backend.py --port=$PORT
