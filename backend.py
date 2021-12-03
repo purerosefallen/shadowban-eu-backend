@@ -638,7 +638,7 @@ if args.debug is not None:
     ensure_dir(debug_dir)
     debug_file = open(args.debug, "a")
 
-def run():
+def start():
     global db
     db = None
     if args.mongo_host is not None:
@@ -651,9 +651,9 @@ def run():
 
 if args.daemon:
     with daemon.DaemonContext():
-        run()
+        start()
 else:
-    run()
+    start()
 
 if __name__ == "__main__":
     web.run_app(app, host=args.host, port=args.port)
