@@ -494,6 +494,47 @@ def print_session_info(sessions):
         text += "\n%6d %5d %9d %5d" % (int(session.locked), session.limit, session.remaining, session.reset - int(time.time()))
     return text
 
+
+# @routes.get("/")
+# async def index(request):
+#     return web.FileResponse(os.path.join("dist", "index.html"))
+
+# @routes.get("/css/{path}")
+# async def css(request):
+#     return web.FileResponse(os.path.join("dist", "css", request.match_info['path']))
+
+# @routes.get("/js/{path}")
+# async def js(request):
+#     return web.FileResponse(os.path.join("dist", "js", request.match_info['path']))
+
+# @routes.get("/img/{path}")
+# async def img(request):
+#     return web.FileResponse(os.path.join("dist", "img", request.match_info['path']))
+
+# @routes.get("/favicon/{path}")
+# async def favicon(request):
+#     return web.FileResponse(os.path.join("dist", "favicon", request.match_info['path']))
+
+# @routes.get("/i18n/{path}")
+# async def i18n(request):
+#     return web.FileResponse(os.path.join("dist", "i18n", request.match_info['path']))
+
+# @routes.get("/favicon.png")
+# async def faviconpng(request):
+#     return web.FileResponse(os.path.join("dist", "favicon.png"))
+
+# @routes.get("/manifest.json")
+# async def manifest(request):
+#     return web.FileResponse(os.path.join("dist", "manifest.json"))
+
+# @routes.get("/index.html")
+# async def indexhtml(request):
+#     return web.FileResponse(os.path.join("dist", "index.html"))
+
+# @routes.get("/worker.js")
+# async def static(request):
+#     return web.FileResponse(os.path.join("dist", "worker.js"))
+
 @routes.get('/.stats')
 async def stats(request):
     text = "--- GUEST SESSIONS ---\n\nLocked Limit Remaining Reset"
@@ -557,14 +598,14 @@ parser.add_argument('--cookie-dir', type=str, default=None, help='directory for 
 parser.add_argument('--log', type=str, default=None, help='log file where test results are written to')
 parser.add_argument('--daemon', action='store_true', help='run in background')
 parser.add_argument('--debug', type=str, default=None, help='debug log file')
-parser.add_argument('--port', type=int, default=8080, help='port which to listen on')
-parser.add_argument('--host', type=str, default='127.0.0.1', help='hostname/ip which to listen on')
+parser.add_argument('--port', type=int, default=8000, help='port which to listen on')
+parser.add_argument('--host', type=str, default='0.0.0.0', help='hostname/ip which to listen on')
 parser.add_argument('--mongo-host', type=str, default=None, help='hostname or IP of mongoDB service to connect to')
 parser.add_argument('--mongo-port', type=int, default=27017, help='port of mongoDB service to connect to')
 parser.add_argument('--mongo-db', type=str, default='tester', help='name of mongo database to use')
 parser.add_argument('--twitter-auth-key', type=str, default=TWITTER_AUTH_KEY, help='auth key for twitter guest session')
 parser.add_argument('--cors-allow', type=str, default=None, help='value for Access-Control-Allow-Origin header')
-args = parser.parse_args()
+args , undefined= parser.parse_known_args()
 
 TwitterSession.twitter_auth_key = args.twitter_auth_key
 
@@ -607,6 +648,7 @@ def run():
     app = web.Application()
     app.add_routes(routes)
     web.run_app(app, host=args.host, port=args.port)
+    return app
 
 if args.daemon:
     with daemon.DaemonContext():
