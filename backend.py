@@ -185,8 +185,10 @@ class TwitterSession:
         self.set_csrf_header()
         await self.refresh_old_token()
         try:
-            async with await self._session.get(url, headers=self._headers) as r:
-                result = await r.json()
+            # async with await self._session.get(url, headers=self._headers) as r:
+            #     result = await r.json()
+            r = await self._session.get(url, headers=self._headers)
+            result = await r.json()
         except Exception as e:
             debug("EXCEPTION: " + str(type(e)))
             debug("EXCEPTION text: " + str(e))
