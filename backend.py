@@ -21,6 +21,8 @@ TWITTER_AUTH_KEY = 'AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%
 
 routes = web.RouteTableDef()
 
+app = web.Application()
+
 class UnexpectedApiError(Exception):
     pass
 
@@ -614,7 +616,6 @@ if (args.cors_allow is None):
 else:
     debug('[CORS] Allowing requests from: ' + args.cors_allow)
 
-
 accounts = []
 if args.account_file is None:
     debug('No account file specified.')
@@ -645,9 +646,7 @@ def run():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(login_accounts(accounts, args.cookie_dir))
     loop.run_until_complete(login_guests())
-    app = web.Application()
     app.add_routes(routes)
-    web.run_app(app, host=args.host, port=args.port)
     return app
 
 if args.daemon:
@@ -655,3 +654,6 @@ if args.daemon:
         run()
 else:
     run()
+
+if __name__ == "__main__":
+    web.run_app(app, host=args.host, port=args.port)
