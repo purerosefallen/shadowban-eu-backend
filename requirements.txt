@@ -1,5 +1,5 @@
-aiohttp
+aiohttp==3.7.4.post0
 pymongo
-bs4
+bs4==0.0.1
 daemon
-gunicorn
+# gunicorn
