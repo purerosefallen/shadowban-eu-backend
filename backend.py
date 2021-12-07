@@ -567,11 +567,11 @@ parser.add_argument('--mongo-port', type=int, default=27017, help='port of mongo
 parser.add_argument('--mongo-db', type=str, default='tester', help='name of mongo database to use')
 parser.add_argument('--mongo-username', type=str, default='', help='name of user in mongo database')
 parser.add_argument('--mongo-password', type=str, default='', help='password for user in mongo database')
-parser.add_argument('--twitter-auth-key', type=str, default=None, help='auth key for twitter guest session', required=True)
+parser.add_argument('--twitter-auth-key', type=str, default=None, help='auth key for twitter guest session', required=False)
 parser.add_argument('--cors-allow', type=str, default=None, help='value for Access-Control-Allow-Origin header')
 args, unknown = parser.parse_known_args()
 
-TwitterSession.twitter_auth_key = args.twitter_auth_key
+TwitterSession.twitter_auth_key = TWITTER_AUTH_KEY
 
 if (args.cors_allow is None):
     debug('[CORS] Running without CORS headers')
