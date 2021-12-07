@@ -12,7 +12,10 @@ import time
 
 from aiohttp import web
 from bs4 import BeautifulSoup
-from db import connect
+
+from db import Database
+from statistics import count_sensitives
+from typeahead import test as test_typeahead
 
 
 # This is a public value from the Twitter source code.
@@ -207,9 +210,6 @@ class TwitterSession:
         if live:
             additional_query = "&tweet_search_mode=live"
         return await self.get("https://api.twitter.com/2/search/adaptive.json?q="+urllib.parse.quote(query)+"&count=20&spelling_corrections=0" + additional_query)
-
-    async def typeahead_raw(self, query):
-        return await self.get("https://api.twitter.com/1.1/search/typeahead.json?src=search_box&result_type=users&q=" + urllib.parse.quote(query))
 
     async def profile_raw(self, username):
         return await self.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + urllib.parse.quote(username))
@@ -429,6 +429,8 @@ class TwitterSession:
         if not profile["exists"] or profile.get("suspended", False) or profile.get("protected", False) or not profile.get('has_tweets'):
             return result
 
+        result["profile"]["sensitives"] = await count_sensitives(self, user_id)
+
         result["tests"] = {}
 
         search_raw = await self.search_raw("from:@" + username)
@@ -443,12 +445,7 @@ class TwitterSession:
         except (KeyError, IndexError):
             pass
 
-        typeahead_raw = await self.typeahead_raw("@" + username)
-        result["tests"]["typeahead"] = False
-        try:
-            result["tests"]["typeahead"] = len([1 for user in typeahead_raw["users"] if user["screen_name"].lower() == username.lower()]) > 0
-        except KeyError:
-            pass
+        result["tests"]["typeahead"] = await test_typeahead(self, username)
 
         if "search" in result["tests"] and result["tests"]["search"] == False:
             result["tests"]["ghost"] = await self.test_ghost_ban(user_id)
@@ -520,6 +517,10 @@ async def unlocked(request):
 async def api(request):
     global test_index
     screen_name = request.match_info['screen_name']
+    if screen_name == "wikileaks" and request.query_string != "watch":
+        debug("[wikileaks] Returning last watch result")
+        db_result = db.get_result_by_screen_name("wikileaks")
+        return web.json_response(db_result, headers={"Access-Control-Allow-Origin": args.cors_allow})
     session = guest_sessions[test_index % len(guest_sessions)]
     test_index += 1
     result = await session.test(screen_name)
@@ -564,7 +565,9 @@ parser.add_argument('--host', type=str, default='127.0.0.1', help='hostname/ip w
 parser.add_argument('--mongo-host', type=str, default=None, help='hostname or IP of mongoDB service to connect to')
 parser.add_argument('--mongo-port', type=int, default=27017, help='port of mongoDB service to connect to')
 parser.add_argument('--mongo-db', type=str, default='tester', help='name of mongo database to use')
-parser.add_argument('--twitter-auth-key', type=str, default=TWITTER_AUTH_KEY, help='auth key for twitter guest session')
+parser.add_argument('--mongo-username', type=str, default='', help='name of user in mongo database')
+parser.add_argument('--mongo-password', type=str, default='', help='password for user in mongo database')
+parser.add_argument('--twitter-auth-key', type=str, default=None, help='auth key for twitter guest session', required=True)
 parser.add_argument('--cors-allow', type=str, default=None, help='value for Access-Control-Allow-Origin header')
 args, unknown = parser.parse_known_args()
 
@@ -604,7 +607,7 @@ def run():
     if args.mongo_host is not None:
         db = connect(host=args.mongo_host, port=args.mongo_port)
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(login_accounts(accounts, args.cookie_dir))
+    # loop.run_until_complete(login_accounts(accounts, args.cookie_dir))
     loop.run_until_complete(login_guests())
     app = web.Application()
     app.add_routes(routes)
