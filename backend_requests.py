@@ -25,7 +25,7 @@ def searchban(screen_name):
                     # "screenName": "TwitterJP",
                     # "protected": False,
                     # "suspended": False,
-                    # "hasTweets": True,
+                    # "has_tweets": True,
                     "exists": False,
                     "error": None
                 },
@@ -66,10 +66,10 @@ def searchban(screen_name):
     #     return returnjson
 
     # if profile_json["statuses_count"] == 0:
-    #     returnjson["profile"]["hasTweets"] = False
+    #     returnjson["profile"]["has_tweets"] = False
     #     return returnjson
     # else:
-    #     returnjson["profile"]["hasTweets"] = True
+    #     returnjson["profile"]["has_tweets"] = True
 
     # check whether the user has any tweets
     usertlurl = "https://api.twitter.com/1.1/statuses/user_timeline.json"
@@ -85,10 +85,10 @@ def searchban(screen_name):
     #     return "No tweets found"  # TODO: Better error handling
 
     if len(usertl_json) == 0:
-        returnjson["profile"]["hasTweets"] = False
+        returnjson["profile"]["has_tweets"] = False
         return returnjson
 
-    returnjson["profile"]["hasTweets"] = True
+    returnjson["profile"]["has_tweets"] = True
 
     if usertl.status_code == 200:
         returnjson["profile"]["exists"] = True
@@ -102,7 +102,7 @@ def searchban(screen_name):
         if "error" in usertl_json and usertl_json["error"] == "Not authorized.":
             returnjson["profile"]["protected"] = True
             returnjson["profile"]["suspended"] = True
-            returnjson["profile"]["hasTweets"] = False
+            returnjson["profile"]["has_tweets"] = False
             return returnjson
         returnjson["profile"]["error"] = usertl_json
         return returnjson
@@ -112,10 +112,10 @@ def searchban(screen_name):
     #     return returnjson
 
     # if usertl_json["statuses_count"] == 0:
-    #     returnjson["profile"]["hasTweets"] = False
+    #     returnjson["profile"]["has_tweets"] = False
     #     return returnjson
     # else:
-    #     returnjson["profile"]["hasTweets"] = True
+    #     returnjson["profile"]["has_tweets"] = True
 
     returnjson["test"] = {
     "search": "ok",
