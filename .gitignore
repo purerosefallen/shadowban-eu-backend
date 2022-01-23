@@ -22,7 +22,7 @@ Icon?
 Thumbs.db
 
 # Babel ES6 compiles files
-dist
+dist/*
 # Documentation build
 doc/build
 

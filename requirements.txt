@@ -1,4 +1,3 @@
-aiohttp
-pymongo
-bs4
-daemon
+flask
+requests_oauthlib
+flask_cors
