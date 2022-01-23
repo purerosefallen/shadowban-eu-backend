@@ -600,7 +600,7 @@ def run():
     global db
     db = None
     if args.mongo_host is not None:
-        db = connect(host=args.mongo_host, port=args.mongo_port)
+        db = connect(host=args.mongo_host, port=args.mongo_port, db=args.mongo_db)
     loop = asyncio.get_event_loop()
     loop.run_until_complete(login_accounts(accounts, args.cookie_dir))
     loop.run_until_complete(login_guests())
