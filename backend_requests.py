@@ -93,7 +93,7 @@ def searchban(screen_name):
     if usertl.status_code == 200:
         returnjson["profile"]["isExist"] = True
         returnjson["profile"]["id"] = usertl_json[0]["user"]["id_str"]
-        returnjson["profile"]["screenName"] = usertl_json[0]["user"]["screen_name"]
+        returnjson["profile"]["screen_name"] = usertl_json[0]["user"]["screen_name"]
         # returnjson["profile"]["protected"] = usertl_json["protected"]
     elif usertl.status_code == 403:
         returnjson["profile"]["suspended"] = True
