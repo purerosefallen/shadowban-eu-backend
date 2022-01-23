@@ -144,6 +144,7 @@ def searchban(screen_name):
     search_tweets = search_v2["globalObjects"]["tweets"]
     if search_tweets == {}:
         returnjson["tests"]["search"] = False
+        returnjson["tests"]["typeahead"] = False
         return returnjson
     else:
         return returnjson
