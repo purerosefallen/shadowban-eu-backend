@@ -122,7 +122,7 @@ def searchban(screen_name):
     #     returnjson["profile"]["has_tweets"] = True
 
     returnjson["tests"] = {
-    "search": "ok",
+    "search": True,
     "typeahead": True, ## suggest ban
     "ghost": {"ban": False},
     "more_replies": {"ban": False, "tweet": "-1", "in_reply_to": "-1"}
@@ -143,7 +143,7 @@ def searchban(screen_name):
     search_v2 = twitter_b.get(searchurl_v2, params=params_v2).json()
     search_tweets = search_v2["globalObjects"]["tweets"]
     if search_tweets == {}:
-        returnjson["tests"]["search"] = "ban"
+        returnjson["tests"]["search"] = False
         return returnjson
     else:
         return returnjson
