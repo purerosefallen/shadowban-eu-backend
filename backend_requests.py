@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from requests_oauthlib import OAuth1Session, OAuth2Session
 import os
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +21,7 @@ def shadowban(screen_name):
 @app.route("/<screen_name>")
 def searchban(screen_name):
     returnjson = {
+                "timestamp": time.time(),
                 "profile": {
                     # "id": "7080152",
                     # "screenName": "TwitterJP",
@@ -36,6 +38,8 @@ def searchban(screen_name):
                 #     "reply": {"ban": False, "tweet": "1480819689898987523", "in_reply_to": "1369626114381901828"}
                 # }
             }
+
+    
     # twitter = OAuth1Session(TWITTER_IPHONE_CK, TWITTER_IPHONE_CS)
     twitter_b = OAuth2Session()
     twitter_b.headers["Authorization"] = "Bearer {}".format(TWITTER_AUTH_KEY)
@@ -117,7 +121,7 @@ def searchban(screen_name):
     # else:
     #     returnjson["profile"]["has_tweets"] = True
 
-    returnjson["test"] = {
+    returnjson["tests"] = {
     "search": "ok",
     "typeahead": True, ## suggest ban
     "ghost": {"ban": True},
