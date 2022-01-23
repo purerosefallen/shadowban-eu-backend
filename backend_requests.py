@@ -128,15 +128,26 @@ def searchban(screen_name):
     "more_replies": {"ban": False, "tweet": "-1", "in_reply_to": "-1"}
 }
 
-    searchurl = "https://api.twitter.com/1.1/users/search.json"
-    params = {"q": "from:{}".format(screen_name), "count": 1}
-    search = twitter_b.get(searchurl, params=params).json()
+    # searchurl = "https://api.twitter.com/1.1/users/search.json"
+    # params = {"q": "from:@{}".format(screen_name), "count": 1}
+    # search = twitter_b.get(searchurl, params=params).json()
     # print(search)
-    if len(search) == 0:
-        returnjson["test"]["search"] = "ban"
+    # if len(search) == 0:
+    #     returnjson["test"]["search"] = "ban"
+    #     return returnjson
+    # else:
+    #     return returnjson
+
+    searchurl_v2 = "https://api.twitter.com/2/search/adaptive.json"
+    params_v2 = {"q": "from:@{}".format(screen_name), "count": 1, "spelling_corrections": 0, "tweet_search_mode": "live"}
+    search_v2 = twitter_b.get(searchurl_v2, params=params_v2).json()
+    search_tweets = search_v2["globalObjects"]["tweets"]
+    if search_tweets == {}:
+        returnjson["tests"]["search"] = "ban"
         return returnjson
     else:
         return returnjson
+    print(search_v2)
 
 
 app.run(debug=False, port=os.environ.get("PORT", 5000), host="0.0.0.0")
