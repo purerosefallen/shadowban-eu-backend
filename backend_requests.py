@@ -26,7 +26,7 @@ def searchban(screen_name):
                     # "protected": False,
                     # "suspended": False,
                     # "hasTweets": True,
-                    "isExist": False,
+                    "exists": False,
                     "error": None
                 },
                 # "check": {
@@ -50,7 +50,7 @@ def searchban(screen_name):
     # profile_json = profile_info.json()
     # print(profile_json)
     # if profile_info.status_code == 200:
-    #     returnjson["profile"]["isExist"] = True
+    #     returnjson["profile"]["exists"] = True
     #     returnjson["profile"]["id"] = profile_json["id_str"]
     #     returnjson["profile"]["screenName"] = profile_json["screen_name"]
     #     returnjson["profile"]["protected"] = profile_json["protected"]
@@ -91,7 +91,7 @@ def searchban(screen_name):
     returnjson["profile"]["hasTweets"] = True
 
     if usertl.status_code == 200:
-        returnjson["profile"]["isExist"] = True
+        returnjson["profile"]["exists"] = True
         returnjson["profile"]["id"] = usertl_json[0]["user"]["id_str"]
         returnjson["profile"]["screen_name"] = usertl_json[0]["user"]["screen_name"]
         # returnjson["profile"]["protected"] = usertl_json["protected"]
