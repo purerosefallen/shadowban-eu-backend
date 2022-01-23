@@ -124,7 +124,7 @@ def searchban(screen_name):
     returnjson["tests"] = {
     "search": "ok",
     "typeahead": True, ## suggest ban
-    "ghost": {"ban": True},
+    "ghost": {"ban": False},
     "more_replies": {"ban": False, "tweet": "-1", "in_reply_to": "-1"}
 }
 
